@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Offer - OfferProof</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav>
+    <a class="logo" href="/">🛡 OfferProof</a>
+    <div class="nav-links">
+        <a href="/">Home</a><a href="/verify">Verify Offer</a><a href="/report">Report Scam</a><a href="/dashboard">Dashboard</a>
+    </div>
+</nav>
+
+<section class="page-wrap">
+    <div class="page-header">
+        <p class="tag">SMART OFFER VERIFICATION</p>
+        <h1>Verify Your Offer</h1>
+        <p>Enter the offer details. Review-1 uses a transparent rule-based risk engine plus repeat-scam matching.</p>
+    </div>
+
+    <form class="form-card" method="POST" action="/analyze">
+        <label>Company Name</label>
+        <input type="text" name="company" placeholder="Example: ABC Technologies" required>
+
+        <label>Recruiter Email</label>
+        <input type="email" name="email" placeholder="Example: hr@company.com">
+
+        <label>Recruiter Phone</label>
+        <input type="text" name="phone" placeholder="Enter recruiter phone number">
+
+        <label>Company Website</label>
+        <input type="text" name="website" placeholder="https://company.com">
+
+        <label>Payment / UPI ID (if requested)</label>
+        <input type="text" name="payment_id" placeholder="Example: recruiter@upi">
+
+        <label>Offer Message</label>
+        <textarea name="message" placeholder="Paste the internship/job offer message here..." required></textarea>
+
+        <button class="analyze-btn" type="submit">Analyze Offer</button>
+        <p class="privacy-note">🔐 OfferProof masks personal identifiers and uses secure fingerprints for repeat-scam matching.</p>
+    </form>
+</section>
+</body>
+</html>

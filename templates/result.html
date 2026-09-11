@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result - OfferProof</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav>
+    <a class="logo" href="/">🛡 OfferProof</a>
+    <div class="nav-links">
+        <a href="/">Home</a><a href="/verify">Verify Again</a><a href="/report">Report Scam</a><a href="/dashboard">Dashboard</a>
+    </div>
+</nav>
+
+<section class="page-wrap">
+    <div class="page-header">
+        <p class="tag">OFFER ANALYSIS RESULT</p>
+        <h1>{{ company or "Submitted Offer" }}</h1>
+        <p>Evidence-based Review-1 result. This is a risk indicator, not a legal determination.</p>
+    </div>
+
+    <div class="result-grid">
+        <div class="result-card {{ result.tone }}">
+            <p class="scan-title">RISK SCORE</p>
+            <div class="big-score">{{ result.score }}<span>/100</span></div>
+            <h2>{{ result.level }}</h2>
+            <p>{{ result.recommendation }}</p>
+        </div>
+
+        <div class="result-card">
+            <p class="scan-title">SCAM INTELLIGENCE MATCH</p>
+            <div class="metric-row"><span>Previous reports</span><strong>{{ previous_reports }}</strong></div>
+            <div class="metric-row"><span>Confirmed victims</span><strong>{{ victim_count }}</strong></div>
+            <div class="metric-row"><span>Reported loss</span><strong>₹{{ "%.0f"|format(total_loss) }}</strong></div>
+        </div>
+    </div>
+
+    <div class="result-card wide">
+        <h3>Why this score?</h3>
+        {% for reason in result.reasons %}
+            <div class="reason">⚠ {{ reason }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="result-card wide">
+        <h3>Privacy-safe identifiers</h3>
+        <p>Email: {{ email or "Not provided" }}</p>
+        <p>Phone: {{ phone or "Not provided" }}</p>
+        <p>Website: {{ website or "Not provided" }}</p>
+    </div>
+</section>
+</body>
+</html>
