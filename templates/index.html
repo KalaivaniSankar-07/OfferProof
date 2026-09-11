@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OfferProof</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav>
+    <a class="logo" href="/">🛡 OfferProof</a>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/verify">Verify Offer</a>
+        <a href="/report">Report Scam</a>
+        <a href="/dashboard">Dashboard</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-text">
+        <p class="tag">AI + CYBERSECURITY PROTECTION</p>
+        <h1>Don't Trust an Offer.<br><span>Prove It.</span></h1>
+        <p class="description">OfferProof helps students detect suspicious internship and job offers using explainable risk analysis, repeat-scam matching and privacy-first reporting.</p>
+        <div class="buttons">
+            <a href="/verify" class="btn primary">Verify an Offer →</a>
+            <a href="/report" class="btn secondary">Report a Scam</a>
+        </div>
+    </div>
+    <div class="scan-card">
+        <p class="scan-title">OFFERPROOF ANALYSIS</p>
+        <h2>82<span>/100</span></h2>
+        <p class="risk">● HIGH RISK</p>
+        <div class="alert">⚠ Payment requested before joining</div>
+        <div class="alert">⚠ Recruiter email mismatch</div>
+        <div class="alert">⚠ Previous scam pattern detected</div>
+        <div class="reports">🚨 Repeat-scam intelligence enabled</div>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Built to stop scams before payment.</h2>
+    <div class="feature-grid">
+        <div class="feature-card"><h3>🧠 Explainable Risk Engine</h3><p>Flags payment pressure, suspicious language, public recruiter emails and website mismatches.</p></div>
+        <div class="feature-card"><h3>🔗 Scam Fingerprint Matching</h3><p>Matches hashed email, phone, website and payment identifiers against previous reports.</p></div>
+        <div class="feature-card"><h3>🔐 Privacy First</h3><p>Student-facing data is masked while sensitive identifiers are stored as secure fingerprints for matching.</p></div>
+    </div>
+</section>
+</body>
+</html>
