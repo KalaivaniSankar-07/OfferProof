@@ -18,3 +18,4 @@ h1{font-size:64px;line-height:1.08;margin-bottom:22px}h1 span{color:#55e6c1}.des
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:25px}.stat-card{background:#0e1d2d;border:1px solid #243b52;border-radius:14px;padding:25px}.stat-card span{color:#92a6b8}.stat-card strong{display:block;font-size:38px;color:#55e6c1;margin-top:10px}
 .report-row{display:flex;justify-content:space-between;gap:20px;padding:15px 0;border-bottom:1px solid #22384e}.report-row small,.muted{color:#8ca0b2}.success-box{background:#12382f;border:1px solid #2f7569;color:#8ff3d9;padding:15px;border-radius:10px;margin-bottom:20px}
 @media(max-width:850px){.nav-links{gap:12px;font-size:13px}.hero{flex-direction:column;align-items:flex-start}.hero-text{width:100%}h1{font-size:44px}.scan-card{width:100%}.feature-grid,.result-grid,.stats-grid{grid-template-columns:1fr}}
+

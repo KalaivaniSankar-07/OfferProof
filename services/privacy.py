@@ -28,3 +28,4 @@ def mask_phone(phone):
     if len(digits) < 4:
         return "*" * len(digits)
     return "*" * (len(digits)-4) + digits[-4:]
+
