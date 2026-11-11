@@ -2,44 +2,289 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Dashboard - OfferProof</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+        .section-heading {
+            margin-top: 45px;
+            margin-bottom: 20px;
+            color: #4ce8c5;
+            font-size: 25px;
+        }
+
+        .verification-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 35px;
+        }
+
+        .verification-card {
+            background: #0d2235;
+            border: 1px solid #294b65;
+            border-radius: 20px;
+            padding: 28px;
+            min-height: 125px;
+        }
+
+        .verification-card span {
+            display: block;
+            color: #a9c7e8;
+            font-size: 17px;
+            margin-bottom: 14px;
+        }
+
+        .verification-card strong {
+            display: block;
+            color: #4ce8c5;
+            font-size: 38px;
+        }
+
+        .verification-card.high strong {
+            color: #ff6b6b;
+        }
+
+        .verification-card.warning strong {
+            color: #ffbe46;
+        }
+
+        .verification-card.safe strong {
+            color: #4ce8c5;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-button {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 12px;
+            background: #4ce8c5;
+            color: #061523;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .dashboard-button.secondary {
+            background: transparent;
+            color: #4ce8c5;
+            border: 1px solid #4ce8c5;
+        }
+
+        @media (max-width: 900px) {
+            .verification-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .verification-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
 <nav>
     <a class="logo" href="/">🛡 OfferProof</a>
+
     <div class="nav-links">
-        <a href="/">Home</a><a href="/verify">Verify Offer</a><a href="/report">Report Scam</a><a href="/dashboard">Dashboard</a>
+        <a href="/">Home</a>
+        <a href="/verify">Verify Offer</a>
+        <a href="/report">Report Scam</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/history">History</a>
     </div>
 </nav>
 
 <section class="page-wrap">
+
     <div class="page-header">
-        <p class="tag">REVIEW-1 INTELLIGENCE DASHBOARD</p>
+        <p class="tag">
+            OFFERPROOF INTELLIGENCE DASHBOARD
+        </p>
+
         <h1>Fraud Intelligence Overview</h1>
-        <p>Aggregated demo statistics without exposing victim identities.</p>
+
+        <p>
+            Aggregated statistics without exposing
+            victim identities.
+        </p>
     </div>
+
+    <!-- Scam report statistics -->
+
+    <h2 class="section-heading">
+        Community Scam Reports
+    </h2>
 
     <div class="stats-grid">
-        <div class="stat-card"><span>Total Reports</span><strong>{{ stats["reports"] or 0 }}</strong></div>
-        <div class="stat-card"><span>Confirmed Victims</span><strong>{{ stats["victims"] or 0 }}</strong></div>
-        <div class="stat-card"><span>Reported Loss</span><strong>₹{{ "%.0f"|format(stats["loss"] or 0) }}</strong></div>
+
+        <div class="stat-card">
+            <span>Total Reports</span>
+
+            <strong>
+                {{ stats["reports"] or 0 }}
+            </strong>
+        </div>
+
+        <div class="stat-card">
+            <span>Confirmed Victims</span>
+
+            <strong>
+                {{ stats["victims"] or 0 }}
+            </strong>
+        </div>
+
+        <div class="stat-card">
+            <span>Reported Loss</span>
+
+            <strong>
+                ₹{{ "%.0f"|format(stats["loss"] or 0) }}
+            </strong>
+        </div>
+
     </div>
 
-    <div class="result-card wide">
-        <h3>Recent Privacy-Safe Reports</h3>
-        {% if recent %}
-            {% for item in recent %}
-            <div class="report-row">
-                <div><strong>{{ item["company"] }}</strong><br><small>{{ item["masked_email"] }} · {{ item["masked_phone"] }}</small></div>
-                <div>{% if item["victim"] %}Victim · ₹{{ "%.0f"|format(item["amount_lost"] or 0) }}{% else %}Reported encounter{% endif %}</div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <p class="muted">No reports yet. Add a test report from the Report Scam page.</p>
-        {% endif %}
+    <!-- Verification statistics -->
+
+    <h2 class="section-heading">
+        Offer Verification Statistics
+    </h2>
+
+    <div class="verification-grid">
+
+        <div class="verification-card">
+            <span>Total Offers Checked</span>
+
+            <strong>
+                {{ verification_stats["total_checks"] or 0 }}
+            </strong>
+        </div>
+
+        <div class="verification-card high">
+            <span>High-Risk Offers</span>
+
+            <strong>
+                {{ verification_stats["high_risk"] or 0 }}
+            </strong>
+        </div>
+
+        <div class="verification-card warning">
+            <span>Suspicious Offers</span>
+
+            <strong>
+                {{ verification_stats["suspicious"] or 0 }}
+            </strong>
+        </div>
+
+        <div class="verification-card safe">
+            <span>Low-Indicator Offers</span>
+
+            <strong>
+                {{ verification_stats["low_risk"] or 0 }}
+            </strong>
+        </div>
+
     </div>
+
+    <!-- Recent reports -->
+
+    <div class="result-card wide">
+
+        <h3>Recent Privacy-Safe Reports</h3>
+
+        {% if recent %}
+
+            {% for item in recent %}
+
+            <div class="report-row">
+
+                <div>
+                    <strong>
+                        {{ item["company"] or "Unknown Company" }}
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        {{ item["masked_email"] or "No email" }}
+                        ·
+                        {{ item["masked_phone"] or "No phone" }}
+                    </small>
+                </div>
+
+                <div>
+
+                    {% if item["victim"] %}
+
+                        Victim ·
+                        ₹{{ "%.0f"|format(
+                            item["amount_lost"] or 0
+                        ) }}
+
+                    {% else %}
+
+                        Reported encounter
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p class="muted">
+                No reports yet. Add a test report from
+                the Report Scam page.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Dashboard buttons -->
+
+    <div class="dashboard-actions">
+
+        <a
+            class="dashboard-button"
+            href="/verify"
+        >
+            Verify New Offer
+        </a>
+
+        <a
+            class="dashboard-button secondary"
+            href="/history"
+        >
+            View Verification History
+        </a>
+
+    </div>
+
 </section>
+
 </body>
 </html>

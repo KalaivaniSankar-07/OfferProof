@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Verification History - OfferProof</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+        .history-container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 70px 30px;
+        }
+
+        .history-heading {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .history-heading h1 {
+            color: #ffffff;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .history-heading p {
+            color: #a9c7e8;
+            font-size: 18px;
+        }
+
+        .filter-card {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 16px;
+            align-items: center;
+            background: #0d2235;
+            border: 1px solid #254761;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .filter-card input,
+        .filter-card select {
+            width: 100%;
+            padding: 14px;
+            background: #132c42;
+            color: #ffffff;
+            border: 1px solid #35536a;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .filter-card input:focus,
+        .filter-card select:focus {
+            border-color: #4ce8c5;
+        }
+
+        .filter-card input::placeholder {
+            color: #829db6;
+        }
+
+        .clear-button {
+            padding: 14px 20px;
+            border: 1px solid #4ce8c5;
+            border-radius: 10px;
+            background: transparent;
+            color: #4ce8c5;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .clear-button:hover {
+            background: #4ce8c5;
+            color: #061523;
+        }
+
+        .result-count {
+            color: #a9c7e8;
+            margin: 0 0 14px 5px;
+            font-size: 15px;
+        }
+
+        .result-count strong {
+            color: #4ce8c5;
+        }
+
+        .history-table-wrapper {
+            overflow-x: auto;
+            background: #0d2235;
+            border: 1px solid #254761;
+            border-radius: 22px;
+            padding: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ffffff;
+        }
+
+        .history-table th {
+            color: #4ce8c5;
+            text-align: left;
+            padding: 16px;
+            border-bottom: 1px solid #35536a;
+        }
+
+        .history-table td {
+            padding: 16px;
+            border-bottom: 1px solid #253f55;
+            vertical-align: top;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .high-risk {
+            background: rgba(255, 91, 91, 0.15);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .suspicious {
+            background: rgba(255, 190, 70, 0.15);
+            color: #ffbe46;
+            border: 1px solid #ffbe46;
+        }
+
+        .low-risk {
+            background: rgba(76, 232, 197, 0.15);
+            color: #4ce8c5;
+            border: 1px solid #4ce8c5;
+        }
+
+        .score {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .reason-text {
+            color: #b8cde0;
+            max-width: 330px;
+            line-height: 1.5;
+        }
+
+        .checked-date {
+            white-space: nowrap;
+            color: #b8cde0;
+        }
+
+        .empty-history,
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: #a9c7e8;
+        }
+
+        .no-results {
+            display: none;
+        }
+
+        @media (max-width: 850px) {
+            .filter-card {
+                grid-template-columns: 1fr;
+            }
+
+            .history-heading h1 {
+                font-size: 34px;
+            }
+
+            .history-container {
+                padding: 40px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a class="logo" href="/">
+        🛡 OfferProof
+    </a>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/verify">Verify Offer</a>
+        <a href="/report">Report Scam</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/history">History</a>
+    </div>
+</nav>
+
+<main class="history-container">
+
+    <div class="history-heading">
+
+        <h1>
+            Verification History
+        </h1>
+
+        <p>
+            Search and filter privacy-safe records of
+            recently analyzed internship offers.
+        </p>
+
+    </div>
+
+    {% if checks %}
+
+    <div class="filter-card">
+
+        <input
+            type="text"
+            id="companySearch"
+            placeholder="Search by company name..."
+            oninput="filterHistory()"
+        >
+
+        <select
+            id="riskFilter"
+            onchange="filterHistory()"
+        >
+            <option value="ALL">
+                All Risk Levels
+            </option>
+
+            <option value="HIGH RISK">
+                High Risk
+            </option>
+
+            <option value="SUSPICIOUS">
+                Suspicious
+            </option>
+
+            <option value="LOW INDICATORS">
+                Low Indicators
+            </option>
+        </select>
+
+        <button
+            type="button"
+            class="clear-button"
+            onclick="clearFilters()"
+        >
+            Clear Filters
+        </button>
+
+    </div>
+
+    <p class="result-count">
+        Showing
+        <strong id="visibleCount">
+            {{ checks|length }}
+        </strong>
+        of
+        <strong>
+            {{ checks|length }}
+        </strong>
+        verification records
+    </p>
+
+    {% endif %}
+
+    <div class="history-table-wrapper">
+
+        {% if checks %}
+
+        <table class="history-table">
+
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Risk Score</th>
+                    <th>Risk Level</th>
+                    <th>Previous Reports</th>
+                    <th>Reasons</th>
+                    <th>Checked At</th>
+                </tr>
+            </thead>
+
+            <tbody id="historyBody">
+
+                {% for check in checks %}
+
+                <tr
+                    class="history-row"
+                    data-company="{{ check['company']|lower }}"
+                    data-risk="{{ check['risk_level'] }}"
+                >
+
+                    <td>
+                        <strong>
+                            {{ check["company"] or "Not Provided" }}
+                        </strong>
+
+                        <br><br>
+
+                        <small>
+                            {{ check["masked_email"] or "No email" }}
+                        </small>
+
+                        <br>
+
+                        <small>
+                            {{ check["masked_phone"] or "No phone" }}
+                        </small>
+                    </td>
+
+                    <td>
+                        <span class="score">
+                            {{ check["risk_score"] }}/100
+                        </span>
+                    </td>
+
+                    <td>
+
+                        {% if check["risk_level"] == "HIGH RISK" %}
+
+                            <span class="risk-badge high-risk">
+                                HIGH RISK
+                            </span>
+
+                        {% elif check["risk_level"] == "SUSPICIOUS" %}
+
+                            <span class="risk-badge suspicious">
+                                SUSPICIOUS
+                            </span>
+
+                        {% else %}
+
+                            <span class="risk-badge low-risk">
+                                LOW INDICATORS
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ check["previous_reports"] }}
+                    </td>
+
+                    <td class="reason-text">
+                        {{ check["reasons"] }}
+                    </td>
+
+                    <td class="checked-date">
+                        {{ check["created_at"] }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div
+            class="no-results"
+            id="noResults"
+        >
+            <h2>
+                No matching verification records
+            </h2>
+
+            <p>
+                Try another company name or risk level.
+            </p>
+        </div>
+
+        {% else %}
+
+        <div class="empty-history">
+
+            <h2>
+                No verification history yet
+            </h2>
+
+            <p>
+                Analyze an internship offer to create
+                the first record.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+<script>
+    function filterHistory() {
+        const searchInput = document
+            .getElementById("companySearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+        const selectedRisk = document
+            .getElementById("riskFilter")
+            .value;
+
+        const rows = document.querySelectorAll(
+            ".history-row"
+        );
+
+        let visibleRows = 0;
+
+        rows.forEach(function(row) {
+            const company = row.dataset.company || "";
+            const risk = row.dataset.risk || "";
+
+            const companyMatches =
+                company.includes(searchInput);
+
+            const riskMatches =
+                selectedRisk === "ALL" ||
+                risk === selectedRisk;
+
+            if (companyMatches && riskMatches) {
+                row.style.display = "";
+                visibleRows++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        document.getElementById(
+            "visibleCount"
+        ).textContent = visibleRows;
+
+        const noResults = document.getElementById(
+            "noResults"
+        );
+
+        if (visibleRows === 0) {
+            noResults.style.display = "block";
+        } else {
+            noResults.style.display = "none";
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById(
+            "companySearch"
+        ).value = "";
+
+        document.getElementById(
+            "riskFilter"
+        ).value = "ALL";
+
+        filterHistory();
+    }
+</script>
+
+</body>
+</html>
